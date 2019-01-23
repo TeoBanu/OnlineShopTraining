@@ -12,23 +12,22 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.ShopApplication;
-import ro.msg.learning.shop.datamodel.Product;
+import ro.msg.learning.shop.datamodel.ProductCategory;
 
-import java.math.BigDecimal;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ShopApplication.class)
-public class ProductRepoTest {
-    private static final int WATCH_ID = 1;
+public class CategoryRepoTest {
 
-    private static final String WATCH_NAME = "smart watch";
+    private static final String ELECTRONICS_NAME = "electronics";
 
     private EmbeddedDatabase db;
 
-    private Product watch = new Product();
+    private ProductCategory category = new ProductCategory();
 
     @Autowired
-    private ProductRepo repo;
+    private CategoryRepo repo;
 
     @Before
     public void setUp() {
@@ -39,28 +38,24 @@ public class ProductRepoTest {
                 .generateUniqueName(true)
                 .addDefaultScripts()
                 .build();
-        watch.setId(WATCH_ID);
-        watch.setName(WATCH_NAME);
-        watch.setDescription("smart description for smart watch");
-        watch.setPrice(BigDecimal.valueOf(10.32));
-        watch.setWeight(20.2);
-        watch.setCategoryId(1);
-        watch.setSupplierId(1);
+        category.setName(ELECTRONICS_NAME);
+        category.setDescription("electronics category description");
     }
 
     @Test
     public void testRepo() {
-        repo.create(watch);
+        repo.create(category);
+        Assert.assertEquals(2, repo.getAll().size());
+        Assert.assertEquals(1, repo.getAll().stream().filter(map -> map.get("name").equals(ELECTRONICS_NAME)).count());
+        Optional<Integer> optionalId = repo.getAll().stream().filter(map -> map.get("name").equals(ELECTRONICS_NAME)).map(map -> (int) map.get("id")).findAny();
+        optionalId.ifPresent(id -> Assert.assertEquals(ELECTRONICS_NAME, repo.getById(id).getName()));
+
+        category.setName("another name");
+        repo.update(category);
+        Assert.assertEquals(1, repo.getAll().stream().filter(map -> map.get("name").equals(ELECTRONICS_NAME)).count());
+
+        optionalId.ifPresent(id -> repo.delete(id));
         Assert.assertEquals(1, repo.getAll().size());
-        Assert.assertEquals(WATCH_NAME, repo.getAll().get(0).get("name"));
-        Assert.assertEquals(WATCH_NAME, repo.getById(WATCH_ID).getName());
-
-        watch.setName("another name");
-        repo.update(watch);
-        Assert.assertNotEquals(WATCH_NAME, repo.getAll().get(0).get("name"));
-
-        repo.delete(WATCH_ID);
-        Assert.assertTrue(repo.getAll().isEmpty());
     }
 
     @After
@@ -68,3 +63,4 @@ public class ProductRepoTest {
         db.shutdown();
     }
 }
+
