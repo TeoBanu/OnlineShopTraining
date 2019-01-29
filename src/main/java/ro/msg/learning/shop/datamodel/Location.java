@@ -2,9 +2,8 @@ package ro.msg.learning.shop.datamodel;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -17,4 +16,7 @@ public class Location {
     private String city;
     private String county;
     private String street;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Stock> stocks;
 }
