@@ -1,9 +1,9 @@
-package ro.msg.learning.shop.services;
+package ro.msg.learning.shop.orders;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import ro.msg.learning.shop.datamodel.Location;
 import ro.msg.learning.shop.datamodel.Product;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
+import ro.msg.learning.shop.exceptions.ResourceNotFoundException;
 import ro.msg.learning.shop.repos.LocationRepo;
 import ro.msg.learning.shop.repos.ProductRepo;
 
@@ -16,10 +16,14 @@ import java.util.stream.Collectors;
 
 public class SingleLocationStrategy implements LocationFinderStrategy {
 
-    @Autowired
-    private LocationRepo locationRepo;
-    @Autowired
-    private ProductRepo productRepo;
+    private final LocationRepo locationRepo;
+    private final ProductRepo productRepo;
+
+    public SingleLocationStrategy(LocationRepo locationRepo,
+                                  ProductRepo productRepo) {
+        this.locationRepo = locationRepo;
+        this.productRepo = productRepo;
+    }
 
     @Override
     public List<LocationProductQuantityDto> search(Map<Integer, Integer> productQuantityMap) {
@@ -37,7 +41,7 @@ public class SingleLocationStrategy implements LocationFinderStrategy {
                 .filter(entry -> entry.getValue() == numberOfOrderedProducts)
                 .map(Map.Entry::getKey)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No location with enough stock"));
+                .orElseThrow(() -> new ResourceNotFoundException("location", "stock", "enough"));
         List<LocationProductQuantityDto> locationProductQuantityDtos = new ArrayList<>();
         products.forEach((product, quantity) -> locationProductQuantityDtos.add(new LocationProductQuantityDto(satisfactoryLocation, product, quantity)));
 

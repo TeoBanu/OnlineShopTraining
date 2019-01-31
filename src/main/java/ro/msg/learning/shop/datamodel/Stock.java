@@ -1,8 +1,10 @@
 package ro.msg.learning.shop.datamodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,28 +16,27 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Stock {
     @EmbeddedId
-    @EqualsAndHashCode.Include
+    @JsonUnwrapped
     private StockId id;
     private int quantity;
 
     @ManyToOne
     @MapsId("locationId")
     @JoinColumn(name = "locationId", referencedColumnName = "id")
+    @JsonIgnore
     private Location location;
 
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name = "productId", referencedColumnName = "id")
+    @JsonIgnore
     private Product product;
-
-    public Stock(StockId id, int quantity) {
-        this.id = id;
-        this.quantity = quantity;
-    }
 
     @Embeddable
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
+    @JsonPropertyOrder({"locationId", "productId"})
     public static class StockId implements Serializable {
         @NotNull
         private int locationId;
@@ -43,6 +44,7 @@ public class Stock {
         @NotNull
         private int productId;
     }
+
 }
 
 

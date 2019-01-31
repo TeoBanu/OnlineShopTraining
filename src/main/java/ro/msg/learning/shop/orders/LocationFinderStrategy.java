@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.services;
+package ro.msg.learning.shop.orders;
 
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
 
