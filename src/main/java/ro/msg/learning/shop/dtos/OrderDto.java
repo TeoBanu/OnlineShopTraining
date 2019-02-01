@@ -3,7 +3,7 @@ package ro.msg.learning.shop.dtos;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 @Data
 public class OrderDto {
@@ -12,5 +12,5 @@ public class OrderDto {
     private String city;
     private String county;
     private String street;
-    private Map<Integer, Integer> products;
+    private List<OrderProductDto> products;
 }

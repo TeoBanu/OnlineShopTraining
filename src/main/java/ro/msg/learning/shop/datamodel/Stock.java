@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @NoArgsConstructor
+@JsonPropertyOrder({"id", "quantity"})
 public class Stock {
     @EmbeddedId
     @JsonUnwrapped

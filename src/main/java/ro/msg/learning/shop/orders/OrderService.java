@@ -8,12 +8,14 @@ import ro.msg.learning.shop.datamodel.OrderDetail;
 import ro.msg.learning.shop.datamodel.Stock;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
 import ro.msg.learning.shop.dtos.OrderDto;
+import ro.msg.learning.shop.dtos.OrderProductDto;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;
 import ro.msg.learning.shop.repos.OrderDetailRepo;
 import ro.msg.learning.shop.repos.OrderRepo;
 import ro.msg.learning.shop.repos.StockRepo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +39,9 @@ public class OrderService {
     }
 
     public Order create(OrderDto orderDto) {
-        List<LocationProductQuantityDto> locationProductQuantityDtos = strategy.search(orderDto.getProducts());
+        Map<Integer, Integer> productQuantityMap = orderDto.getProducts().stream().collect(
+                Collectors.toMap(OrderProductDto::getId, OrderProductDto::getQuantity));
+        List<LocationProductQuantityDto> locationProductQuantityDtos = strategy.search(productQuantityMap);
         List<Stock> stocksWithUpdatedQuantities = locationProductQuantityDtos.stream()
                 .map(this::updateStock)
                 .collect(Collectors.toList());
