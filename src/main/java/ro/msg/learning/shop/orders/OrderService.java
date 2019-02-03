@@ -2,46 +2,44 @@ package ro.msg.learning.shop.orders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.datamodel.Location;
-import ro.msg.learning.shop.datamodel.Order;
-import ro.msg.learning.shop.datamodel.OrderDetail;
-import ro.msg.learning.shop.datamodel.Stock;
+import ro.msg.learning.shop.datamodel.*;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
 import ro.msg.learning.shop.dtos.OrderDto;
-import ro.msg.learning.shop.dtos.OrderProductDto;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;
+import ro.msg.learning.shop.repos.CustomerRepo;
 import ro.msg.learning.shop.repos.OrderDetailRepo;
 import ro.msg.learning.shop.repos.OrderRepo;
 import ro.msg.learning.shop.repos.StockRepo;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
 
-    private StockRepo stockRepo;
-    private LocationFinderStrategy strategy;
-    private OrderRepo orderRepo;
-    private OrderDetailRepo orderDetailRepo;
+    private final StockRepo stockRepo;
+    private final LocationFinderStrategy strategy;
+    private final OrderRepo orderRepo;
+    private final OrderDetailRepo orderDetailRepo;
+    private final Customer customer;
 
     @Autowired
     public OrderService(
             LocationFinderStrategy strategy,
             StockRepo stockRepo,
             OrderRepo orderRepo,
-            OrderDetailRepo orderDetailRepo) {
+            OrderDetailRepo orderDetailRepo,
+            CustomerRepo customerRepo) {
         this.strategy = strategy;
         this.stockRepo = stockRepo;
         this.orderRepo = orderRepo;
         this.orderDetailRepo = orderDetailRepo;
+        this.customer =
+                customerRepo.findById(1).orElseThrow(() -> new ResourceNotFoundException("customer", "id", String.valueOf(1)));
     }
 
     public Order create(OrderDto orderDto) {
-        Map<Integer, Integer> productQuantityMap = orderDto.getProducts().stream().collect(
-                Collectors.toMap(OrderProductDto::getId, OrderProductDto::getQuantity));
-        List<LocationProductQuantityDto> locationProductQuantityDtos = strategy.search(productQuantityMap);
+        List<LocationProductQuantityDto> locationProductQuantityDtos = strategy.search(orderDto.getProducts());
         List<Stock> stocksWithUpdatedQuantities = locationProductQuantityDtos.stream()
                 .map(this::updateStock)
                 .collect(Collectors.toList());
@@ -74,11 +72,12 @@ public class OrderService {
         Order order = new Order();
         order.setCity(orderDto.getCity());
         order.setCountry(orderDto.getCountry());
-        order.setCounty(order.getCounty());
+        order.setCounty(orderDto.getCounty());
         order.setStreet(orderDto.getStreet());
         order.setShippedFrom(location);
         //TODO: set customer when security & principal
-        return null;
+        order.setCustomer(customer);
+        return order;
     }
 
     private OrderDetail createOrderDetailObject(Order order, LocationProductQuantityDto locationProductQuantityDto) {

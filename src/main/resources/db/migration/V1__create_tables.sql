@@ -1,4 +1,4 @@
-create sequence hibernate_sequence start with 1 increment by 1;
+create sequence hibernate_sequence start with 1000 increment by 1;
 create table customer (id integer not null, first_name varchar(255), last_name varchar(255), username varchar(255), primary key (id));
 create table location (id integer not null, city varchar(255), country varchar(255), county varchar(255), name varchar(255), street varchar(255), primary key (id));
 create table product_category (id integer not null, description varchar(255), name varchar(255), primary key (id));
