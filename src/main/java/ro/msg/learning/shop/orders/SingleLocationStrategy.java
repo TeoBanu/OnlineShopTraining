@@ -1,7 +1,7 @@
 package ro.msg.learning.shop.orders;
 
-import ro.msg.learning.shop.datamodel.Location;
-import ro.msg.learning.shop.datamodel.Product;
+import ro.msg.learning.shop.datamodels.Location;
+import ro.msg.learning.shop.datamodels.Product;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
 import ro.msg.learning.shop.dtos.OrderProductDto;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;

@@ -2,7 +2,7 @@ package ro.msg.learning.shop.stocks;
 
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Test;
-import ro.msg.learning.shop.datamodel.Stock;
+import ro.msg.learning.shop.datamodels.Stock;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

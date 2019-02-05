@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.datamodel;
+package ro.msg.learning.shop.datamodels;
 
 import lombok.Data;
 
@@ -8,13 +8,9 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class Location {
+public class Supplier {
     @Id
     @GeneratedValue
     private int id;
     private String name;
-    private String country;
-    private String city;
-    private String county;
-    private String street;
 }

@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.datamodel;
+package ro.msg.learning.shop.datamodels;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

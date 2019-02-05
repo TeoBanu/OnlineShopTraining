@@ -2,7 +2,7 @@ package ro.msg.learning.shop.orders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.datamodel.*;
+import ro.msg.learning.shop.datamodels.*;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;

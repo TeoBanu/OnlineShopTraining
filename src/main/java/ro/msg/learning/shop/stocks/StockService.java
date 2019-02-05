@@ -2,7 +2,7 @@ package ro.msg.learning.shop.stocks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.datamodel.Stock;
+import ro.msg.learning.shop.datamodels.Stock;
 import ro.msg.learning.shop.repos.StockRepo;
 
 import java.util.List;

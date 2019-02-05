@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.datamodel;
+package ro.msg.learning.shop.datamodels;
 
 import lombok.Data;
 

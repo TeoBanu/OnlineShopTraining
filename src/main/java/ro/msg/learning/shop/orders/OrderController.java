@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ro.msg.learning.shop.datamodel.Order;
+import ro.msg.learning.shop.datamodels.Order;
 import ro.msg.learning.shop.dtos.OrderDto;
 
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/api/order")
 public class OrderController {
 
     private final OrderService orderService;
