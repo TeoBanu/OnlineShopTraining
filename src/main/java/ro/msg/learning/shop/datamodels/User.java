@@ -4,9 +4,7 @@ package ro.msg.learning.shop.datamodels;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -22,10 +20,16 @@ public class User {
 
     private String email;
 
+    @OneToOne
+    @JoinColumn(name = "customerId", referencedColumnName = "id")
+    private Customer customer;
+
+
     public User(User user) {
         id = user.id;
         username = user.username;
         password = user.password;
         email = user.email;
+        customer = user.getCustomer();
     }
 }

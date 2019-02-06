@@ -2,11 +2,13 @@ package ro.msg.learning.shop.orders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.datamodels.*;
+import ro.msg.learning.shop.datamodels.Location;
+import ro.msg.learning.shop.datamodels.Order;
+import ro.msg.learning.shop.datamodels.OrderDetail;
+import ro.msg.learning.shop.datamodels.Stock;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;
-import ro.msg.learning.shop.repos.CustomerRepo;
 import ro.msg.learning.shop.repos.OrderDetailRepo;
 import ro.msg.learning.shop.repos.OrderRepo;
 import ro.msg.learning.shop.repos.StockRepo;
@@ -21,21 +23,17 @@ public class OrderService {
     private final LocationFinderStrategy strategy;
     private final OrderRepo orderRepo;
     private final OrderDetailRepo orderDetailRepo;
-    private final Customer customer;
 
     @Autowired
     public OrderService(
             LocationFinderStrategy strategy,
             StockRepo stockRepo,
             OrderRepo orderRepo,
-            OrderDetailRepo orderDetailRepo,
-            CustomerRepo customerRepo) {
+            OrderDetailRepo orderDetailRepo) {
         this.strategy = strategy;
         this.stockRepo = stockRepo;
         this.orderRepo = orderRepo;
         this.orderDetailRepo = orderDetailRepo;
-        this.customer =
-                customerRepo.findById(1).orElseThrow(() -> new ResourceNotFoundException("customer", "id", String.valueOf(1)));
     }
 
     public Order create(OrderDto orderDto) {
@@ -75,8 +73,7 @@ public class OrderService {
         order.setCounty(orderDto.getCounty());
         order.setStreet(orderDto.getStreet());
         order.setShippedFrom(location);
-        //TODO: set customer when security & principal
-        order.setCustomer(customer);
+        order.setCustomer(orderDto.getCustomer());
         return order;
     }
 

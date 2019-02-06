@@ -1,6 +1,7 @@
 package ro.msg.learning.shop.dtos;
 
 import lombok.Data;
+import ro.msg.learning.shop.datamodels.Customer;
 
 import java.util.Date;
 import java.util.List;
@@ -13,4 +14,5 @@ public class OrderDto {
     private String county;
     private String street;
     private List<OrderProductDto> products;
+    private Customer customer;
 }
