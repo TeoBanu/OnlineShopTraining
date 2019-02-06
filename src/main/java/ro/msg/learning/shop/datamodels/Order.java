@@ -3,6 +3,7 @@ package ro.msg.learning.shop.datamodels;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
@@ -11,6 +12,8 @@ public class Order {
     @Id
     @GeneratedValue
     private int id;
+
+    private Date date;
 
     //location id
     @ManyToOne

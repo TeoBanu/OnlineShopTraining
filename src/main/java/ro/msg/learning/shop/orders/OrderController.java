@@ -12,6 +12,8 @@ import ro.msg.learning.shop.datamodels.Order;
 import ro.msg.learning.shop.datamodels.User;
 import ro.msg.learning.shop.dtos.OrderDto;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
@@ -29,6 +31,7 @@ public class OrderController {
         if (principalObj instanceof User) {
             User user = (User) principalObj;
             orderDto.setCustomer(user.getCustomer());
+            orderDto.setTimestamp(new Date());
             return orderService.create(orderDto);
         }
         throw new UsernameNotFoundException("No user principal");

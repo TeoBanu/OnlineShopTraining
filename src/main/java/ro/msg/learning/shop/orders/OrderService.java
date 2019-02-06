@@ -74,6 +74,7 @@ public class OrderService {
         order.setStreet(orderDto.getStreet());
         order.setShippedFrom(location);
         order.setCustomer(orderDto.getCustomer());
+        order.setDate(orderDto.getTimestamp());
         return order;
     }
 
