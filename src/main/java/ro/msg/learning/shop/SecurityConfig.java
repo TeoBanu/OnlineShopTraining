@@ -30,13 +30,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/**").hasAuthority("customer")
                 .and()
                 .formLogin()
-                 .loginPage("/login").usernameParameter("username").passwordParameter("password")
+                .loginPage("/login").usernameParameter("username").passwordParameter("password")
                 .and()
                 .httpBasic()
                 .and()
                 .exceptionHandling().accessDeniedPage("/denied")
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                .headers().frameOptions().disable();
     }
 
     @Autowired
@@ -44,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Bean(name="passwordEncoder")
+    @Bean(name = "passwordEncoder")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
