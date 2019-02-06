@@ -3,6 +3,7 @@ package ro.msg.learning.shop.orders;
 import ro.msg.learning.shop.datamodels.Location;
 import ro.msg.learning.shop.datamodels.Product;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
+import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.dtos.OrderProductDto;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;
 import ro.msg.learning.shop.repos.LocationRepo;
@@ -30,7 +31,8 @@ public class SingleLocationStrategy implements LocationFinderStrategy {
     }
 
     @Override
-    public List<LocationProductQuantityDto> search(List<OrderProductDto> productQuantities) {
+    public List<LocationProductQuantityDto> search(OrderDto orderDto) {
+        List<OrderProductDto> productQuantities = orderDto.getProducts();
         Map<Integer, Integer> productQuantityMap = productQuantities.stream().collect(Collectors.toMap(OrderProductDto::getId, OrderProductDto::getQuantity));
         List<Integer> satisfactoryLocationIds = stockRepo.selectSatisfactoryLocations(productQuantities);
         if (satisfactoryLocationIds == null || satisfactoryLocationIds.isEmpty()) {

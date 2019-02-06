@@ -37,7 +37,7 @@ public class OrderService {
     }
 
     public Order create(OrderDto orderDto) {
-        List<LocationProductQuantityDto> locationProductQuantityDtos = strategy.search(orderDto.getProducts());
+        List<LocationProductQuantityDto> locationProductQuantityDtos = strategy.search(orderDto);
         List<Stock> stocksWithUpdatedQuantities = locationProductQuantityDtos.stream()
                 .map(this::updateStock)
                 .collect(Collectors.toList());
