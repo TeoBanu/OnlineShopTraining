@@ -29,6 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/api/**").hasAuthority("customer")
                 .and()
+                .authorizeRequests().antMatchers("/odata/**").hasAuthority("customer")
+                .and()
                 .formLogin()
                 .loginPage("/login").usernameParameter("username").passwordParameter("password")
                 .and()
