@@ -6,6 +6,7 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,15 +25,6 @@ public class Location {
     @EdmProperty
     private String name;
 
-    @EdmProperty
-    private String country;
-
-    @EdmProperty
-    private String city;
-
-    @EdmProperty
-    private String county;
-
-    @EdmProperty
-    private String street;
+    @Embedded
+    private Address address;
 }

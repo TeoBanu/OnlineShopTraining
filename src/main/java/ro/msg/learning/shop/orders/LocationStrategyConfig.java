@@ -17,9 +17,11 @@ public class LocationStrategyConfig {
     private final LocationRepo locationRepo;
     private final ProductRepo productRepo;
     private final RestTemplate restTemplate;
+    private final GoogleConfigurationProperties googleConfigurationProperties;
 
     @Autowired
     public LocationStrategyConfig(@Value("${location.strategy}") LocationStrategyType type,
+                                  GoogleConfigurationProperties googleConfigurationProperties,
                                   RestTemplate restTemplate,
                                   LocationRepo locationRepo,
                                   ProductRepo productRepo,
@@ -29,6 +31,7 @@ public class LocationStrategyConfig {
         this.productRepo = productRepo;
         this.stockRepo = stockRepo;
         this.restTemplate = restTemplate;
+        this.googleConfigurationProperties = googleConfigurationProperties;
     }
 
     @Bean
@@ -37,7 +40,7 @@ public class LocationStrategyConfig {
             case SINGLE:
                 return new SingleLocationStrategy(locationRepo, productRepo, stockRepo);
             case CLOSEST:
-                return new ClosestLocationStrategy(locationRepo, productRepo, stockRepo, restTemplate);
+                return new ClosestLocationStrategy(locationRepo, productRepo, stockRepo, restTemplate, googleConfigurationProperties);
             default:
                 throw new IllegalArgumentException("No location strategy implementation for given type");
         }

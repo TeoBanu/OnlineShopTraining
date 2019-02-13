@@ -2,10 +2,7 @@ package ro.msg.learning.shop.orders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.datamodels.Location;
-import ro.msg.learning.shop.datamodels.Order;
-import ro.msg.learning.shop.datamodels.OrderDetail;
-import ro.msg.learning.shop.datamodels.Stock;
+import ro.msg.learning.shop.datamodels.*;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;
@@ -68,10 +65,13 @@ public class OrderService {
 
     private Order createOrderObject(OrderDto orderDto, Location location) {
         Order order = new Order();
-        order.setCity(orderDto.getCity());
-        order.setCountry(orderDto.getCountry());
-        order.setCounty(orderDto.getCounty());
-        order.setStreet(orderDto.getStreet());
+        Address address = new Address(
+                orderDto.getCountry(),
+                orderDto.getCity(),
+                orderDto.getCounty(),
+                orderDto.getStreet());
+
+        order.setDeliveryAddress(address);
         order.setShippedFrom(location);
         order.setCustomer(orderDto.getCustomer());
         order.setDate(orderDto.getTimestamp());

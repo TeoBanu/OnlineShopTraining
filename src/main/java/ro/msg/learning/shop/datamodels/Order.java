@@ -33,15 +33,6 @@ public class Order {
     private Customer customer;
 
     //delivery address
-    @EdmProperty
-    private String country;
-
-    @EdmProperty
-    private String city;
-
-    @EdmProperty
-    private String county;
-
-    @EdmProperty
-    private String street;
+    @Embedded
+    private Address deliveryAddress;
 }

@@ -2,13 +2,11 @@ package ro.msg.learning.shop.repos;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import ro.msg.learning.shop.datamodels.Order;
 import ro.msg.learning.shop.datamodels.Revenue;
 
 import java.util.List;
 
-@Repository
 public interface OrderRepo extends JpaRepository<Order, Integer> {
     @Query("SELECT new ro.msg.learning.shop.datamodels.Revenue(sum(od.quantity * p.price) as sum, o.shippedFrom as location, o.date as date) "+
             "FROM Order o, OrderDetail od, Product p WHERE " +

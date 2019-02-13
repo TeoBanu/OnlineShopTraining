@@ -32,11 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/odata/**").hasAuthority("customer")
                 .and()
                 .formLogin()
-                .loginPage("/login").usernameParameter("username").passwordParameter("password")
+                .loginPage("/login.html").usernameParameter("username").passwordParameter("password")
                 .and()
                 .httpBasic()
                 .and()
-                .exceptionHandling().accessDeniedPage("/denied")
+                .exceptionHandling().accessDeniedPage("/denied.html")
                 .and()
                 .csrf().disable()
                 .headers().frameOptions().disable();

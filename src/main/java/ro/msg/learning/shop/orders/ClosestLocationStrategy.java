@@ -2,7 +2,8 @@ package ro.msg.learning.shop.orders;
 
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriTemplate;
+import ro.msg.learning.shop.datamodels.Address;
 import ro.msg.learning.shop.datamodels.Location;
 import ro.msg.learning.shop.datamodels.Product;
 import ro.msg.learning.shop.dtos.LocationProductQuantityDto;
@@ -18,27 +19,23 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ClosestLocationStrategy implements LocationFinderStrategy {
-    private static final String KEY_KEY = "key";
-    private static final String KEY_VALUE = "AIzaSyBPtBPSLKNAwOfu3zq48XaIVyLlscgdz5M";
-    private static final String UNITS_KEY = "units";
-    private static final String UNITS_VALUE = "metric";
-    private static final String ORIGINS_KEY = "origins";
-    private static final String DESTINATIONS_KEY = "destinations";
-    private static final String GOOGLE_DISTANCE_ENDPOINT = "https://maps.googleapis.com/maps/api/distancematrix/json";
 
     private final LocationRepo locationRepo;
     private final ProductRepo productRepo;
     private final StockRepo stockRepo;
     private final RestTemplate restTemplate;
+    private final GoogleConfigurationProperties config;
 
     public ClosestLocationStrategy(LocationRepo locationRepo,
-                                  ProductRepo productRepo,
-                                  StockRepo stockRepo,
-                                   RestTemplate restTemplate) {
+                                   ProductRepo productRepo,
+                                   StockRepo stockRepo,
+                                   RestTemplate restTemplate,
+                                   GoogleConfigurationProperties config) {
         this.locationRepo = locationRepo;
         this.productRepo = productRepo;
         this.stockRepo = stockRepo;
         this.restTemplate = restTemplate;
+        this.config = config;
     }
 
     @Override
@@ -78,28 +75,25 @@ public class ClosestLocationStrategy implements LocationFinderStrategy {
         String customerLocationString = getCommaSeparatedLocationString(customerLocation);
         String productLocationString = getCommaSeparatedLocationString(productLocation);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_DISTANCE_ENDPOINT)
-                .queryParam(UNITS_KEY, UNITS_VALUE)
-                .queryParam(ORIGINS_KEY, customerLocationString)
-                .queryParam(DESTINATIONS_KEY, productLocationString)
-                .queryParam(KEY_KEY, KEY_VALUE);
-
-        return sendPost(builder.toUriString()).getBody().getRows().get(0).getElements().get(0).getDistance().getValue();
+        return sendPost(customerLocationString, productLocationString).getBody().getRows().get(0).getElements().get(0).getDistance().getValue();
 
     }
 
     private String getCommaSeparatedLocationString(Location location) {
         return
-                location.getStreet() + "," +
-                location.getCity() + "," +
-                location.getCounty() + "," +
-                location.getCountry();
+                location.getAddress().getStreet() + "," +
+                location.getAddress().getCity() + "," +
+                location.getAddress().getCounty() + "," +
+                location.getAddress().getCountry();
     }
 
-    private ResponseEntity<GoogleDistance> sendPost(String uri) {
+    private ResponseEntity<GoogleDistance> sendPost(String customerLocation, String productLocation) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> request = new HttpEntity<>(headers);
+
+        UriTemplate uriTemplate = new UriTemplate(config.getUri());
+        String uri = uriTemplate.expand(customerLocation, productLocation, config.getKey()).toString();
 
         return restTemplate.exchange(uri,
                 HttpMethod.GET,
@@ -110,10 +104,10 @@ public class ClosestLocationStrategy implements LocationFinderStrategy {
 
     private Location createCustomerLocation(String street, String country, String county, String city) {
         Location location = new Location();
-        location.setStreet(street);
-        location.setCity(city);
-        location.setCountry(country);
-        location.setCounty(county);
+        Address address = new Address(country, city, county, street);
+
+        location.setAddress(address);
+
         return location;
     }
 
