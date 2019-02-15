@@ -92,8 +92,7 @@ public class ClosestLocationStrategy implements LocationFinderStrategy {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> request = new HttpEntity<>(headers);
 
-        UriTemplate uriTemplate = new UriTemplate(config.getUri());
-        String uri = uriTemplate.expand(customerLocation, productLocation, config.getKey()).toString();
+        String uri = config.getUri().expand(customerLocation, productLocation, config.getKey()).toString();
 
         return restTemplate.exchange(uri,
                 HttpMethod.GET,
