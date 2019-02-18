@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.odata;
+package ro.msg.learning.shop.odata.annotations;
 
 import org.apache.olingo.odata2.annotation.processor.api.AnnotationServiceFactory;
 import org.apache.olingo.odata2.api.ODataService;
@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("request")
-public class AnnotationOdataServiceFactory extends ODataServiceFactory {
+public class OdataAnnotationServiceFactory extends ODataServiceFactory {
 
     /**
      * Instance holder for all annotation relevant instances which should be used as singleton
      * instances within the ODataApplication (ODataService)
      */
     private static class AnnotationInstances {
-        final static String MODEL_PACKAGE = "ro.msg.learning.shop.datamodels";
-        final static ODataService ANNOTATION_ODATA_SERVICE;
+        static final String MODEL_PACKAGE = "ro.msg.learning.shop.datamodels";
+        static final ODataService ANNOTATION_ODATA_SERVICE;
 
         static {
             try {
